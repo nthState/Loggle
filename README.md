@@ -1,7 +1,11 @@
 # Loggle
 
+## _A Tool to Easily Show/Hide OSLogs_
+
 Are you fed up with manually toggling OS Log?  
-Are you fed up with writing a script to configure your OS Logs?
+Are you fed up with writing a script to configure your OS Logs?  
+
+Are you looking for an easy, quick way to toggle OSLog?
 
 
 ![Screenshot 1l](https://github.com/nthState/Loggle/blob/main/Assets/Screenshots/screen1.png?raw=true)
