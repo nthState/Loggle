@@ -1,54 +1,76 @@
 # Loggle
 
-https://stackoverflow.com/questions/34717355/getting-privilege-to-write-a-file-to-library-colorsync-profiles-in-a-mac-appli
-https://developer.apple.com/documentation/os/logging/customizing_logging_behavior_while_debugging
-https://medium.com/@acwrightdesign/creating-a-macos-menu-bar-application-using-swiftui-54572a5d5f87
+Are you fed up with manually toggling OS Log?
+Are you fed up with writing a script to configure your OS Logs?
 
 
-sudo log config --mode "level:default" --subsystem "com.nthstate.Loggle"
+![Screenshot 1l](https://github.com/nthState/Loggle/blob/main/Assets/Screenshots/screen1.png?raw=true)
 
 
-#do shell script "/usr/bin/log config --status" with administrator privileges
-set myvar to "sdfsf"
-do shell script "echo \" & myvar & \" > /Library/Preferences/Logging/Subsystems/a.txt" with administrator privileges
+### Why is this not in the AppStore?
+
+Sandboxing - We need to be able to write to `/Library/Preferences/Logging/Subsystems` - which is outside of the App's Sandbox
+
+### Why is this an App and not just a button in Xcode?
+
+I'd love to add this as a button to Xcode, it would fit just here:
+
+![Screenshot 1l](https://github.com/nthState/Loggle/blob/main/Assets/Screenshots/XcodeDebugBar.png?raw=true)
 
 
+### Code
 
-
-```
-AuthorizationExecuteWithPrivileges
-osascript -e
-osascript -e `do shell script "/usr/bin/log config --status" with administrator privileges`
-
-
-osascript -e 'tell application "Terminal" to do script "/usr/bin/log config --status"'
-
-osascript -e 'tell application "Terminal" to activate'
-osascript -e 'tell application "Terminal" to do script "echo HELLO"'
-
-osascript -e 'tell application "Terminal" to do script "echo HELLO" with administrator privileges'
-
-
-osascript -e 'do shell script "/usr/bin/log config --status" with administrator privileges'
-
-
-
-Enable:
-sudo log config --mode "level:debug" --subsystem com.your_company.your_subsystem_name
-
-Read:
-sudo log config --status --subsystem com.your_company.your_subsystem_name
-
-
+You may have a OSLog set up like:
 
 ```
+import os.log
+
+extension OSLog {
+    
+    // MARK: - Subsystem
+    
+    /// The subsystem for the app
+    public static var appSubsystem = "com.nthstate.Loggle"
+    
+    // MARK: - Categories
+    
+    /// GPU Effects
+    static let gpuEffects = OSLog(subsystem: OSLog.appSubsystem, category: "GPU Effects")
+    
+    /// StoreKit
+    static let storeKit = OSLog(subsystem: OSLog.appSubsystem, category: "StoreKit")
+}
+```
+
+and you may be logging like:
+
+```
+os_log("%{PUBLIC}@", log: OSLog.gpuEffects, type: .debug, "GPU Time Stamp")
+```
+
+How do you toggle this via the command line?
+
+```
+# Pick the correct level: off/debug/info/default
+sudo log config --mode "level:debug" --subsystem com.mybundle --category "GPU Effects"
+```
+
+## How does this App work? 
+
+This App supports two ways of controling OSLog output:
+
+1. Issuing direct commands to `log`
+or
+2. Editing bundle.plist files at `/Library/Preferences/Logging/Subsystems`
+
+The bundle.plist files look similar to:
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>Preview</key>
+  <key>StoreKit</key>
   <dict>
     <key>Level</key>
     <dict>
@@ -58,7 +80,7 @@ sudo log config --status --subsystem com.your_company.your_subsystem_name
       <string>Inherit</string>
     </dict>
   </dict>
-  <key>Test</key>
+  <key>GPU Effects</key>
   <dict>
     <key>Level</key>
     <dict>
@@ -70,30 +92,4 @@ sudo log config --status --subsystem com.your_company.your_subsystem_name
   </dict>
 </dict>
 </plist>
-
 ```
-
-
-
-try
-  open for access file the logFile with write permission
-  write (logText & return) to file the logFile starting at eof
-  close access file the logFile
-on error
-  try
-    close access file the logFile
-  end try
-end try
-
-
-set myFile to "TestReport.txt"
-set p to POSIX file "/Library/Preferences/Logging/Subsystems"
-set rr to ((path to desktop) as text)
-set the logFile to ((path to) as text) & "log.txt"
-set the logText to "This is a text that should be written into the file"
-
-tell application "Finder" 
-  if not (exists file logFile) then
-    make new file at folder p with properties {name:myFile}
-  end if
-end tell

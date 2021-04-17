@@ -2,7 +2,10 @@
 //  AppEnvironment.swift
 //  Loggle
 //
-//  Created by Chris Davis on 17/04/2021.
+//  Copyright © 2021 Chris Davis, www.chrisdavis.com.
+//  Released under the GNU General Public License v3.0.
+//
+//  See https://github.com/nthState/Loggle/blob/master/LICENSE for license information.
 //
 
 import Foundation
@@ -51,6 +54,43 @@ extension AppEnvironment {
 
 extension AppEnvironment {
   
+  func apply(url: URL, level: String, category: String) {
+    
+    guard let item = map[url] else {
+      return
+    }
+    
+    let script = String(format: """
+
+    do shell script "sudo log config --mode 'level:%@' --subsystem com.nthstate.Loggle --category '%@'" with administrator privileges
+
+    """, level, category)
+
+    guard let appleScript = NSAppleScript(source: script) else {
+      return
+    }
+    var compileError: NSDictionary?
+    let success = appleScript.compileAndReturnError(&compileError)
+    
+    if let err = compileError {
+      os_log("%{PUBLIC}@", log: OSLog.test, type: .error, "error: \(err)")
+      return
+    }
+    
+    var possibleError: NSDictionary?
+    appleScript.executeAndReturnError(&possibleError)
+    
+    if let err = possibleError {
+      os_log("%{PUBLIC}@", log: OSLog.test, type: .error, "error: \(err)")
+      return
+    }
+    
+  }
+  
+}
+
+extension AppEnvironment {
+  
   func save(url: URL) {
     guard let item = map[url] else {
       return
@@ -84,15 +124,7 @@ extension AppEnvironment {
     do shell script "echo " & fileContents & " > " & fullPath with administrator privileges
 
     """, fileName, processedScript)
-    
-//    set subSystemPath to "/Library/Preferences/Logging/Subsystems/"
-//    set fullPath to subSystemPath & fileName
-//
-//    set subSystemPath to "/Library/Preferences/Logging/Subsystems/"
-//    set fullPath to subSystemPath & fileName
-//    #set fileContents to "%@"
-//    #do shell script "echo " & quoted form of fileContents & " > " & fullPath with administrator privileges
-    
+
     guard let appleScript = NSAppleScript(source: script) else {
       return
     }

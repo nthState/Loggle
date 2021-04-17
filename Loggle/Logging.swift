@@ -5,7 +5,6 @@
 //  Created by Chris Davis on 16/04/2021.
 //
 
-import Foundation
 import os.log
 
 extension OSLog {

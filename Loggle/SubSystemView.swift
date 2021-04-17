@@ -80,7 +80,8 @@ struct SubSystemView: View {
           
 //          let enable = appEnvironment.map[subSystemURL]![key]?.level?["Enable"] ?? ""
 //          let persist = appEnvironment.map[subSystemURL]![key]?.level?["Persist"] ?? ""
-          CategoryRowView(categoryName: key,
+          CategoryRowView(url: subSystemURL,
+                          categoryName: key,
                           enable: enable,
                           persist: persist)
         }
