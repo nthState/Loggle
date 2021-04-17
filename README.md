@@ -22,7 +22,7 @@ I'd love to add this as a button to Xcode, it would fit just here:
 
 You may have a OSLog set up like:
 
-```
+```swift
 import os.log
 
 extension OSLog {
@@ -44,13 +44,13 @@ extension OSLog {
 
 and you may be logging like:
 
-```
+```swift
 os_log("%{PUBLIC}@", log: OSLog.gpuEffects, type: .debug, "GPU Time Stamp")
 ```
 
 How do you toggle this via the command line?
 
-```
+```bash
 # Pick the correct level: off/debug/info/default
 sudo log config --mode "level:debug" --subsystem com.mybundle --category "GPU Effects"
 ```
@@ -65,7 +65,7 @@ or
 
 The bundle.plist files look similar to:
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
