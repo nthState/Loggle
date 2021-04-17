@@ -1,6 +1,6 @@
 # Loggle
 
-Are you fed up with manually toggling OS Log?
+Are you fed up with manually toggling OS Log?  
 Are you fed up with writing a script to configure your OS Logs?
 
 
