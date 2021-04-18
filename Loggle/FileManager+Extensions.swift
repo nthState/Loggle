@@ -2,7 +2,10 @@
 //  FileManager+Extensions.swift
 //  Loggle
 //
-//  Created by Chris Davis on 17/04/2021.
+//  Copyright © 2021 Chris Davis, www.chrisdavis.com.
+//  Released under the GNU General Public License v3.0.
+//
+//  See https://github.com/nthState/Loggle/blob/master/LICENSE for license information.
 //
 
 import Foundation

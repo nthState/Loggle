@@ -2,7 +2,10 @@
 //  Logging.swift
 //  Loggle
 //
-//  Created by Chris Davis on 16/04/2021.
+//  Copyright © 2021 Chris Davis, www.chrisdavis.com.
+//  Released under the GNU General Public License v3.0.
+//
+//  See https://github.com/nthState/Loggle/blob/master/LICENSE for license information.
 //
 
 import os.log
@@ -16,10 +19,13 @@ extension OSLog {
     
     // MARK: - Categories
     
-    /// Test
-    static let test = OSLog(subsystem: OSLog.appSubsystem, category: "Test")
+    /// Read/Write files
+    static let fileIO = OSLog(subsystem: OSLog.appSubsystem, category: "File IO")
     
-    /// Preview
-    static let preview = OSLog(subsystem: OSLog.appSubsystem, category: "Preview")
+    /// Running AppleScripts
+    static let applescript = OSLog(subsystem: OSLog.appSubsystem, category: "AppleScript")
+  
+  /// Serialization of data / Codable
+  static let serialization = OSLog(subsystem: OSLog.appSubsystem, category: "Serialization")
   
 }

@@ -20,31 +20,32 @@ class AppEnvironment: ObservableObject {
   @Published var map: [URL: [String: Category]] = [: ]
   
   init() {
-    subSystemURLs = FileManager.default.urls(at: subsystemURL, type: "plist") ?? []
+    reload()
+  }
+  
+  public func reload() {
+    subSystemURLs = FileManager.default.urls(at: subsystemURL, type: "plist")
 
     subSystemURLs.forEach { (url) in
       map[url] = load(url: url)
     }
   }
   
-  
 }
 
 extension AppEnvironment {
   
-  func load(url: URL) -> [String: Category] {
+  private func load(url: URL) -> [String: Category] {
     
     var output: [String: Category] = [: ]
     do {
       let data = try Data(contentsOf: url)
-      //let str = String(decoding: data, as: UTF8.self)
 
       let decoder = PropertyListDecoder()
       output = try decoder.decode([String: Category].self, from: data)
-
-      os_log("%{PUBLIC}@", log: OSLog.test, type: .error, "read")
+      
     } catch {
-      os_log("%{PUBLIC}@", log: OSLog.test, type: .error, "error: \(error)")
+      os_log("%{PUBLIC}@", log: OSLog.serialization, type: .error, "error: \(error)")
     }
     
     return output
@@ -54,36 +55,15 @@ extension AppEnvironment {
 
 extension AppEnvironment {
   
-  func apply(url: URL, level: String, category: String) {
-    
-    guard let item = map[url] else {
-      return
-    }
-    
+  public func add(bundleId: String) {
+
     let script = String(format: """
 
-    do shell script "sudo log config --mode 'level:%@' --subsystem com.nthstate.Loggle --category '%@'" with administrator privileges
+    do shell script "sudo log config --mode 'level:%@' --subsystem %@ --category '%@'" with administrator privileges
 
-    """, level, category)
+    """, "debug", bundleId, "DEFAULT-OPTIONS")
 
-    guard let appleScript = NSAppleScript(source: script) else {
-      return
-    }
-    var compileError: NSDictionary?
-    let success = appleScript.compileAndReturnError(&compileError)
-    
-    if let err = compileError {
-      os_log("%{PUBLIC}@", log: OSLog.test, type: .error, "error: \(err)")
-      return
-    }
-    
-    var possibleError: NSDictionary?
-    appleScript.executeAndReturnError(&possibleError)
-    
-    if let err = possibleError {
-      os_log("%{PUBLIC}@", log: OSLog.test, type: .error, "error: \(err)")
-      return
-    }
+    run(appleScript: script)
     
   }
   
@@ -91,7 +71,64 @@ extension AppEnvironment {
 
 extension AppEnvironment {
   
-  func save(url: URL) {
+  public func add(category: String, to bundleId: String) {
+
+    let script = String(format: """
+
+    do shell script "sudo log config --mode 'level:%@' --subsystem %@ --category '%@'" with administrator privileges
+
+    """, "debug", bundleId, category)
+
+    run(appleScript: script)
+    
+  }
+  
+}
+
+extension AppEnvironment {
+  
+  public func apply(url: URL, level: String, category: String) {
+
+    let script = String(format: """
+
+    do shell script "sudo log config --mode 'level:%@' --subsystem com.nthstate.Loggle --category '%@'" with administrator privileges
+
+    """, level, category)
+
+    run(appleScript: script)
+    
+  }
+  
+}
+
+extension AppEnvironment {
+  
+  private func run(appleScript script: String) {
+    guard let appleScript = NSAppleScript(source: script) else {
+      return
+    }
+    var compileError: NSDictionary?
+    appleScript.compileAndReturnError(&compileError)
+    
+    if let err = compileError {
+      os_log("%{PUBLIC}@", log: OSLog.applescript, type: .error, "error: \(err)")
+      return
+    }
+    
+    var possibleError: NSDictionary?
+    appleScript.executeAndReturnError(&possibleError)
+    
+    if let err = possibleError {
+      os_log("%{PUBLIC}@", log: OSLog.applescript, type: .error, "error: \(err)")
+      return
+    }
+  }
+  
+}
+
+extension AppEnvironment {
+  
+  public func save(url: URL) {
     guard let item = map[url] else {
       return
     }
@@ -103,7 +140,7 @@ extension AppEnvironment {
       let data = try encoder.encode(item)
       str = String(decoding: data, as: UTF8.self)
     } catch {
-      os_log("%{PUBLIC}@", log: OSLog.test, type: .error, "error: \(error)")
+      os_log("%{PUBLIC}@", log: OSLog.serialization, type: .error, "error: \(error)")
     }
     
     guard let s = str else {
@@ -125,24 +162,7 @@ extension AppEnvironment {
 
     """, fileName, processedScript)
 
-    guard let appleScript = NSAppleScript(source: script) else {
-      return
-    }
-    var compileError: NSDictionary?
-    let success = appleScript.compileAndReturnError(&compileError)
-    
-    if let err = compileError {
-      os_log("%{PUBLIC}@", log: OSLog.test, type: .error, "error: \(err)")
-      return
-    }
-    
-    var possibleError: NSDictionary?
-    appleScript.executeAndReturnError(&possibleError)
-    
-    if let err = possibleError {
-      os_log("%{PUBLIC}@", log: OSLog.test, type: .error, "error: \(err)")
-      return
-    }
+    run(appleScript: script)
     
   }
   

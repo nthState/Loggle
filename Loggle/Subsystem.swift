@@ -1,31 +1,17 @@
 //
-//  Subsystem.swift
+//  SubSytem.swift
 //  Loggle
 //
-//  Created by Chris Davis on 16/04/2021.
+//  Copyright © 2021 Chris Davis, www.chrisdavis.com.
+//  Released under the GNU General Public License v3.0.
+//
+//  See https://github.com/nthState/Loggle/blob/master/LICENSE for license information.
 //
 
 import Foundation
 
 class Subsystem: Codable {
-  
-  let defaultOptionsKey = "DEFAULT-OPTIONS"
-  
-  var defaultKey: Category?
-//
-//  // TODO parsing unknown keys
-//
-//  //var categories: [String: [CategoryOptionKeys: EnableOptions]] = [: ]
-//  enum CodingKeys: String, CodingKey {
-//    case defaultKey = "DEFAULT-OPTIONS"
-//  }
-//
-//  required init(from decoder: Decoder) throws {
-//    let container = try decoder.container(keyedBy: CodingKeys.self)
-//
-//    defaultKey = try container.decode(Category.self, forKey: .defaultKey)
-//  }
-  
+
 }
 
 class Category: Codable {
@@ -42,8 +28,8 @@ enum CategoryOptionKeys: String, Codable {
 }
 
 enum EnableOptions: String {
-  case inherit = "Inherit"
-  case `default` = "Default"
+  case off = "off"
+  case `default` = "default"
   case info = "info"
   case debug = "debug"
 }

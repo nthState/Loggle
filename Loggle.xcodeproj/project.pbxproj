@@ -19,7 +19,6 @@
 		67BAB6E2262B098A008B27BB /* CategoryRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67BAB6E1262B098A008B27BB /* CategoryRowView.swift */; };
 		67BAB6E5262B0AEE008B27BB /* SubSystemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67BAB6E4262B0AEE008B27BB /* SubSystemView.swift */; };
 		67BAB6EB262B0FBB008B27BB /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67BAB6EA262B0FBB008B27BB /* AppEnvironment.swift */; };
-		67BAB6EF262B2613008B27BB /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67BAB6EE262B2613008B27BB /* String+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,7 +37,6 @@
 		67BAB6E1262B098A008B27BB /* CategoryRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryRowView.swift; sourceTree = "<group>"; };
 		67BAB6E4262B0AEE008B27BB /* SubSystemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubSystemView.swift; sourceTree = "<group>"; };
 		67BAB6EA262B0FBB008B27BB /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
-		67BAB6EE262B2613008B27BB /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,7 +74,6 @@
 			children = (
 				67BAB6EA262B0FBB008B27BB /* AppEnvironment.swift */,
 				671FD3792629E3E100D1D06C /* AppDelegate.swift */,
-				67BAB6EE262B2613008B27BB /* String+Extensions.swift */,
 				67BAB6DE262B0876008B27BB /* FileManager+Extensions.swift */,
 				671FD37B2629E3E100D1D06C /* ContentView.swift */,
 				67BAB6E4262B0AEE008B27BB /* SubSystemView.swift */,
@@ -175,7 +172,6 @@
 				671FD3912629E58400D1D06C /* Subsystem.swift in Sources */,
 				67BAB6E5262B0AEE008B27BB /* SubSystemView.swift in Sources */,
 				67BAB6DF262B0876008B27BB /* FileManager+Extensions.swift in Sources */,
-				67BAB6EF262B2613008B27BB /* String+Extensions.swift in Sources */,
 				671FD37A2629E3E100D1D06C /* AppDelegate.swift in Sources */,
 				67BAB6EB262B0FBB008B27BB /* AppEnvironment.swift in Sources */,
 				67BAB6E2262B098A008B27BB /* CategoryRowView.swift in Sources */,

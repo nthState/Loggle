@@ -1,8 +1,11 @@
 //
-//  SubsystemView.swift
+//  SubSystemView.swift
 //  Loggle
 //
-//  Created by Chris Davis on 17/04/2021.
+//  Copyright © 2021 Chris Davis, www.chrisdavis.com.
+//  Released under the GNU General Public License v3.0.
+//
+//  See https://github.com/nthState/Loggle/blob/master/LICENSE for license information.
 //
 
 import SwiftUI
@@ -12,14 +15,18 @@ struct SubSystemView: View {
   
   @EnvironmentObject var appEnvironment: AppEnvironment
   
+  @State var addCategory: Bool = false
+  
   let subSystemURL: URL
   @State var expanded: Bool = false
   
   func expand() {
     
     
-    
-    expanded = !expanded
+    withAnimation {
+        
+      expanded = !expanded
+    }
   }
   
 
@@ -35,29 +42,31 @@ struct SubSystemView: View {
             .resizable()
             .aspectRatio(contentMode: .fit)
             .rotationEffect(Angle.degrees(expanded ? 90 : 0))
-            .frame(width: 24, height: 24)
+            .frame(width: 18, height: 18)
             .animation(.easeInOut)
         })
         .buttonStyle(PlainButtonStyle())
         
         Text(subSystemURL.deletingPathExtension().lastPathComponent)
+          .font(.system(size: 20))
+        
+        Spacer()
         
         Button(action: {
           appEnvironment.save(url: subSystemURL)
         }, label: {
-          Text("Save")
+          Text("Save Plist")
         })
         
         Button(action: {
-          
+          addCategory.toggle()
         }, label: {
-          Image("plus.circle")
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 24, height: 24)
+          Text("Add Category")
         })
-        .buttonStyle(PlainButtonStyle())
-        
+        .sheet(isPresented: $addCategory) {
+          AddCategoryView(bundleId: subSystemURL.deletingPathExtension().lastPathComponent)
+        }
+
       }
     }
     
@@ -65,21 +74,18 @@ struct SubSystemView: View {
       VStack {
         ForEach(appEnvironment.map[subSystemURL]!.keys.sorted(), id: \.self) { key in
           
-          var enable = Binding {
+          let enable = Binding {
             appEnvironment.map[subSystemURL]![key]?.level?["Enable"] ?? ""
           } set: { (newValue) in
             appEnvironment.map[subSystemURL]![key]?.level?["Enable"] = newValue
           }
           
-          var persist = Binding {
+          let persist = Binding {
             appEnvironment.map[subSystemURL]![key]?.level?["Persist"] ?? ""
           } set: { (newValue) in
             appEnvironment.map[subSystemURL]![key]?.level?["Persist"] = newValue
           }
 
-          
-//          let enable = appEnvironment.map[subSystemURL]![key]?.level?["Enable"] ?? ""
-//          let persist = appEnvironment.map[subSystemURL]![key]?.level?["Persist"] ?? ""
           CategoryRowView(url: subSystemURL,
                           categoryName: key,
                           enable: enable,
@@ -96,5 +102,43 @@ struct SubsystemView_Previews: PreviewProvider {
   static var previews: some View {
     SubSystemView(subSystemURL: URL(string: "/com.blah.foo")!)
       .environmentObject(AppEnvironment())
+  }
+}
+
+struct AddCategoryView: View {
+  
+  let bundleId: String
+  @State var category: String = ""
+  @EnvironmentObject var appEnvironment: AppEnvironment
+  @Environment(\.presentationMode) var presentationMode
+  
+  var body: some View {
+    
+    VStack {
+      
+      HStack {
+        
+        Text("Add New Category")
+        
+        Button("Close") {
+          presentationMode.wrappedValue.dismiss()
+        }
+        
+      }
+      
+      VStack {
+        
+        TextField("Category Name", text: $category)
+        
+        Button("Add") {
+          appEnvironment.add(category: category, to: bundleId)
+          appEnvironment.reload()
+          presentationMode.wrappedValue.dismiss()
+        }
+      }
+      
+    }
+    .padding()
+    
   }
 }
