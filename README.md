@@ -21,6 +21,9 @@ I'd love to add this as a button to Xcode, it would fit just here:
 
 ![Screenshot 1l](https://github.com/nthState/Loggle/blob/main/Assets/Screenshots/XcodeDebugBar.png?raw=true)
 
+### Why not just edit the PList file directly?
+
+I don't want to make mistakes when typing in a debug level, I just want quick changes.
 
 ### Code
 
